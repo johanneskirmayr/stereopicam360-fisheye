@@ -30,19 +30,16 @@ import os
 import cv2
 import numpy as np
 
-
-
-
 # Global variables preset
 total_photos = 50
 
 # Camera resolution
-photo_width = 1280
-photo_height = 480
+photo_width = 480 #1280
+photo_height = 480 #480
 
 # Image resolution for processing
-img_width = 320
-img_height = 240
+img_width =  480# 320
+img_height = 480 # 240
 image_size = (img_width,img_height)
 
 # Chessboard parameters
@@ -52,10 +49,11 @@ square_size = 2.5
 
 # Visualization options
 drawCorners = False
-showSingleCamUndistortionResults = False
+showSingleCamUndistortionResults = True
 showStereoRectificationResults = True
 writeUdistortedImages = True
-imageToDisp = './scenes/scene_1280x480_1.png'
+# imageToDisp = './scenes/scene_1280x480_1.png'
+imageToDisp = './calib_files/stereo_30.png'
 
 # Calibration settings
 CHECKERBOARD = (6,9)
@@ -86,8 +84,8 @@ print ('Main cycle start')
 while photo_counter != total_photos:
   photo_counter = photo_counter + 1
   print ('Import pair No ' + str(photo_counter))
-  leftName = './pairs/left_'+str(photo_counter).zfill(2)+'.png'
-  rightName = './pairs/right_'+str(photo_counter).zfill(2)+'.png'
+  leftName = './calib_files/left_'+str(photo_counter).zfill(2)+'.png'
+  rightName = './calib_files/right_'+str(photo_counter).zfill(2)+'.png'
   leftExists = os.path.isfile(leftName)
   rightExists = os.path.isfile(rightName)
   
@@ -350,9 +348,9 @@ if (showSingleCamUndistortionResults):
     # calibration images resolution. So 320x240 parameters are hardcoded
     # now. 
     
-    #h, w = imgL.shape[:2]
-    w = 320
-    h = 240
+    h, w = imgL.shape[:2]
+    #w = 320
+    #h = 240
     print("Undistorting picture with (width, height):", (w, h))
     try:
         npz_file = np.load('./calibration_data/{}p/camera_calibration{}.npz'.format(h, '_left'))
@@ -404,7 +402,7 @@ if (showStereoRectificationResults):
     # calibration images resolution. So 320x240 parameters are hardcoded
     # now. 
     try:
-        npzfile = np.load('./calibration_data/{}p/stereo_camera_calibration.npz'.format(240))
+        npzfile = np.load('./calibration_data/{}p/stereo_camera_calibration.npz'.format(img_height)) #240
     except:
         print("Camera calibration data not found in cache, file " & './calibration_data/{}p/stereo_camera_calibration.npz'.format(240))
         exit(0)
@@ -415,10 +413,10 @@ if (showStereoRectificationResults):
     rightMapY = npzfile['rightMapY']
 
     #read image to undistort
-    photo_width = 640
-    photo_height = 240
-    image_width = 320
-    image_height = 240
+    photo_width = photo_width*2 #640
+    photo_height = photo_height #240
+    image_width = img_width #320
+    image_height = img_height #240
     image_size = (image_width,image_height)
 
     if os.path.isfile(imageToDisp) == False:
